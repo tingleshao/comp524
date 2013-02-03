@@ -1,3 +1,8 @@
+# comp 524 lab1
+# author: chong shao (cshao@cs.unc.edu
+# scanner for a calculator language
+
+
 $MOV_RULE = ["Si", "Sp", "So", "SA", "ii", "id", "iB", "Ad", "dB", "BC", "Cr", "Br", "rr"]
 $END_STATE = "opidr"
 
