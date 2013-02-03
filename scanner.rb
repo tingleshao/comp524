@@ -25,7 +25,7 @@ end
 
 def scanOne(state, char)
   if state == 'S'
-    if "1234567890".include?(char)
+    if checkState("1234567890", char, 'i', "read digit")
       state = 'i'
       puts "read digit"
     elsif "+-*/^".include?(char)
@@ -38,7 +38,7 @@ def scanOne(state, char)
 	  state = 'p'
 	  puts "read paren"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
     end 
   elsif state == 'i'
@@ -52,7 +52,7 @@ def scanOne(state, char)
 	  state = 'B'
 	  puts "read exp symbol"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
 	end
   elsif state == 'A'
@@ -60,7 +60,7 @@ def scanOne(state, char)
 	  state = 'd'
 	  puts "read digit"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
 	end
   elsif state == 'd' 
@@ -71,7 +71,7 @@ def scanOne(state, char)
 	  state = 'B'
 	  puts "read exp symbol"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
 	end
   elsif state == 'B'
@@ -82,7 +82,7 @@ def scanOne(state, char)
 	  state = 'r'
 	  puts "read digit"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
 	end
   elsif state == 'C'
@@ -90,7 +90,7 @@ def scanOne(state, char)
 	  state = 'r'
 	  puts "read digit"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
 	end
   elsif state == 'r'
@@ -98,13 +98,19 @@ def scanOne(state, char)
 	  state = 'r'
 	  puts "read digit"
 	else 
-	  puts "parsing error"
+	  puts "scanning error"
 	  state = 'e'
 	end
   end
   return state
 end
 
+def checkState(ruleStr, char, state, info)
+  if ruleStr.include?(char)
+    return true 
+  end
+  return false
+end
 
 
 if __FILE__ == $0
