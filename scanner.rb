@@ -5,26 +5,47 @@
 
 $MOV_RULE = ["Si", "Sp", "So", "SA", "ii", "id", "iB", "Ad", "dB", "BC", "Cr", "Br", "rr"]
 $END_STATE = "opidr"
-
+$DIGIT_STATE = "idr"
+$tokens = []
+$bufferedToken = ""
 def scan(input)
   state = 'S'
-  input[0].split(//).each do |s|
+  bufferedToken = ''
+  states = [] 
+  inputArray = input[0].split(//)
+  begin_index = 0
+  end_index = 0
+  inputArray.each do |s|
   #  puts "s: " + s
     state = scanOne(state,s)
-	puts "state: " + state
-  end
-  	puts "state o: " + state
+	#puts "state: " + state
+	
+	    puts "scan success, " + state 
+	   states << state
 
+	     $bufferedToken = $bufferedToken + s
+	puts "current state: " + state
+	
+  end
+  #	puts "state o: " + state
+ $tokens << $bufferedToken
+ $tokens = $tokens[1..-1]
   if $END_STATE.include?(state)
-	  puts "parse success" 
-  else 
-      puts "parse error at final char"
+      puts "scanning error at final char"
+	  
+	  puts states.to_s
+	  puts $tokens.to_s
+	 else
+	  puts "www"
+	  puts states.to_s
+	  puts $tokens.to_s
   end
 
 end
 
-def scanOne(state, char)
-  if state == 'S'
+def startState(char)
+    $tokens << $bufferedToken
+	$bufferedToken = ""
     if checkState("1234567890", char, 'i', "read digit")
       state = 'i'
       puts "read digit"
@@ -40,7 +61,13 @@ def scanOne(state, char)
 	else 
 	  puts "scanning error"
 	  state = 'e'
-    end 
+	end
+	return state 
+end
+
+def scanOne(state, char)
+  if state == 'S'
+    state = startState(char)
   elsif state == 'i'
     if "1234567890".include?(char)
       state = 'i'
@@ -52,16 +79,16 @@ def scanOne(state, char)
 	  state = 'B'
 	  puts "read exp symbol"
 	else 
-	  puts "scanning error"
-	  state = 'e'
+	  puts "token finished"
+	  state = startState(char)
 	end
   elsif state == 'A'
     if "1234567890".include?(char)
 	  state = 'd'
 	  puts "read digit"
 	else 
-	  puts "scanning error"
-	  state = 'e'
+	  puts "token finished"
+	  state = startState(char)
 	end
   elsif state == 'd' 
     if "1234567890".include?(char)
@@ -71,8 +98,8 @@ def scanOne(state, char)
 	  state = 'B'
 	  puts "read exp symbol"
 	else 
-	  puts "scanning error"
-	  state = 'e'
+	  puts "token finished"
+	  state = startState(char)
 	end
   elsif state == 'B'
     if "+-".include?(char)
@@ -82,25 +109,28 @@ def scanOne(state, char)
 	  state = 'r'
 	  puts "read digit"
 	else 
-	  puts "scanning error"
-	  state = 'e'
+	  puts "token finished"
+	  state = startState(char)
 	end
   elsif state == 'C'
     if "1234567890".include?(char)
 	  state = 'r'
 	  puts "read digit"
 	else 
-	  puts "scanning error"
-	  state = 'e'
+	  puts "token finished"
+	  state = startState(char)
 	end
   elsif state == 'r'
     if "1234567890".include?(char)
 	  state = 'r'
 	  puts "read digit"
 	else 
-	  puts "scanning error"
-	  state = 'e'
-	end
+	  puts "token finished"
+	  state = startState(char)
+    end
+  else
+       puts "token finished"
+	  state = startState(char)
   end
   return state
 end
